@@ -34,7 +34,6 @@ export default function JobMenubar() {
           />
         </div>
         <FilterBtn />
-        <ColumnsBtn />
       </div>
       <AddJobBtn />
     </div>
