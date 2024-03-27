@@ -31,11 +31,83 @@ export default function FilterBtn() {
       <Popover>
         <Dialog className='p-4 bg-white border rounded shadow-lg border-gray-950/20'>
           <CheckboxGroup className='flex flex-col'>
-            <Label className='font-bold'>Status</Label>
-            <Checkbox value='Applied'>Applied</Checkbox>
-            <Checkbox value='Applied'>Interviewing</Checkbox>
-            <Checkbox value='Applied'>Offered</Checkbox>
-            <Checkbox value='Applied'>Rejected</Checkbox>
+            <Label className='font-bold mb-2  '>Status</Label>
+            <Checkbox value='Applied'>
+              <div className='checkbox'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth='1.5'
+                  stroke='currentColor'
+                  className='w-6 h-6 text-white transition-all duration-200'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='m4.5 12.75 6 6 9-13.5'
+                  />
+                </svg>
+              </div>
+              Applied
+            </Checkbox>
+            <Checkbox value='Interviewing'>
+              <div className='checkbox'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth='1.5'
+                  stroke='currentColor'
+                  className='w-6 h-6 text-white transition-all duration-200'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='m4.5 12.75 6 6 9-13.5'
+                  />
+                </svg>
+              </div>
+              Interviewing
+            </Checkbox>
+            <Checkbox value='Offered'>
+              <div className='checkbox'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth='1.5'
+                  stroke='currentColor'
+                  className='w-6 h-6 text-white transition-all duration-200'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='m4.5 12.75 6 6 9-13.5'
+                  />
+                </svg>
+              </div>
+              Offered
+            </Checkbox>
+            <Checkbox value='Rejected'>
+              <div className='checkbox'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth='1.5'
+                  stroke='currentColor'
+                  className='w-6 h-6 text-white transition-all duration-200'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='m4.5 12.75 6 6 9-13.5'
+                  />
+                </svg>
+              </div>
+              Rejected
+            </Checkbox>
           </CheckboxGroup>
         </Dialog>
       </Popover>
