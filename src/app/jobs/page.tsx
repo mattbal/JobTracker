@@ -16,6 +16,8 @@ import {
 import Status from '../components/Status';
 import Stat from '../components/Stat';
 import JobMenubar from '../components/JobMenubar';
+import prisma from '@/lib/prisma';
+
 /*
 function JobColumn(props: any) {
   return (
@@ -87,10 +89,17 @@ export default async function Page() {
   let activeApplications = 0;
   let interviewingApplications = 5;
 
+  const jobs = await prisma.job.findMany();
+
   return (
     <div className='mx-8'>
       <h1 className='mt-12 text-5xl font-bold'>Jobs</h1>
-      <Tabs className='mt-4'>
+      <JobMenubar />
+      {jobs.map((job) => (
+        <div key={job.id}>{job.name}</div>
+      ))}
+
+      {/* <Tabs className='mt-4'>
         <TabList className='flex border-b-2 border-gray-300 gap-x-2'>
           <Tab
             id='active'
@@ -132,7 +141,7 @@ export default async function Page() {
                   <JobCell>
                     <input type='text' />
                   </JobCell>
-                  {/* <JobCell>iOS Software Engineering Program Manager - Sensing & Connectivity</JobCell> */}
+                  <JobCell>iOS Software Engineering Program Manager - Sensing & Connectivity</JobCell>
                   <JobCell>Microsoft</JobCell>
                   <JobCell>Dec 15th, 2023</JobCell>
                   <JobCell>Dec 13th, 2023</JobCell>
@@ -147,7 +156,7 @@ export default async function Page() {
           </ResizableTableContainer>
         </TabPanel>
         <TabPanel id='archive'></TabPanel>
-      </Tabs>
+      </Tabs> */}
     </div>
   );
 }
