@@ -1,30 +1,21 @@
-import { useState } from 'react';
-import {
-  DialogTrigger,
-  Dialog,
-  Modal,
-  ModalOverlay,
-  Button,
-  Input,
-  Label,
-  TextField,
-  Select,
-  SelectValue,
-  Popover,
-  ListBox,
-  ListBoxItem,
-  Heading,
-} from 'react-aria-components';
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment, useState } from 'react';
 import Status from './Status';
 import { Oval } from 'react-loader-spinner';
 
 export default function AddJobBtn() {
+  const [open, setOpen] = useState(false);
+
   const [jobURL, setJobURL] = useState('');
   const [status, setStatus] = useState('react-aria-1');
 
   return (
-    <DialogTrigger>
-      <Button className='inline-flex items-center border border-gray-950/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600 rounded gap-x-2 py-3 px-2.5 text-gray-700 hover:bg-gray-100 hover:border-gray-950/30 transition-colors ease-linear duration-150'>
+    <>
+      <button
+        type='button'
+        onClick={() => setOpen(true)}
+        className='inline-flex items-center border border-gray-950/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600 rounded-md gap-x-2 py-3 px-2.5 text-gray-700 hover:bg-gray-50'
+      >
         <svg
           xmlns='http://www.w3.org/2000/svg'
           fill='none'
@@ -36,119 +27,195 @@ export default function AddJobBtn() {
           <path strokeLinecap='round' strokeLinejoin='round' d='M12 4.5v15m7.5-7.5h-15' />
         </svg>
         Add job
-      </Button>
-      <ModalOverlay className='fixed inset-0 z-20'>
-        <Modal className='w-full max-w-sm p-6 overflow-hidden text-left align-middle bg-white shadow-xl absolute right-0 inset-y-0 border-l border-gray-200'>
-          <Dialog className=''>
-            {({ close }) => (
-              <form className='flex flex-col'>
-                <div className='flex items-center pb-2 border-b border-gray-950/10'>
-                  <Heading slot='title' className='text-xl font-bold text-gray-900'>
-                    Add job
-                  </Heading>
-                  <Button onPress={close} className='ml-auto text-gray-600'>
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      strokeWidth='1.5'
-                      stroke='currentColor'
-                      className='w-6 h-6'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        d='M6 18 18 6M6 6l12 12'
-                      />
-                    </svg>
-                  </Button>
-                </div>
-                <TextField autoFocus className='mt-5' value={jobURL} onChange={setJobURL}>
-                  <Label>Job post URL</Label>
-                  <div className='flex mt-2 rounded'>
-                    <Input
-                      placeholder='https://...'
-                      className='text-gray-700 appearance-none block px-2.5 py-3 w-full ring-1 ring-inset ring-gray-950/20 focus:ring-2 focus:ring-blue-600 focus:outline-none rounded-l'
-                    />
-                    <Button
-                      className='px-3.5 py-2 text-white -ml-px bg-blue-500 w-fit active:bg-blue-600 rounded-r'
-                      onPress={() => alert('test')}
-                    >
-                      Scan
-                    </Button>
-                  </div>
-                </TextField>
-                <TextField className='mt-4'>
-                  <Label>Name</Label>
-                  <Input className='text-gray-700 appearance-none block px-2.5 py-3 w-full ring-1 ring-inset ring-gray-950/20 focus:ring-2 focus:ring-blue-600 focus:outline-none hover:ring-gray-950/30 rounded-l' />
-                </TextField>
-                <TextField className='mt-4'>
-                  <Label>Company</Label>
-                  <Input className='text-gray-700 appearance-none block px-2.5 py-3 w-full ring-1 ring-inset ring-gray-950/20 focus:ring-2 focus:ring-blue-600 focus:outline-none hover:ring-gray-950/30 rounded-l' />
-                </TextField>
-                <TextField className='mt-4'>
-                  <Label>Job ID</Label>
-                  <Input className='text-gray-700 appearance-none block px-2.5 py-3 w-full ring-1 ring-inset ring-gray-950/20 focus:ring-2 focus:ring-blue-600 focus:outline-none hover:ring-gray-950/30 rounded-l' />
-                </TextField>
-                <TextField className='mt-4'>
-                  <Label>Date Posted</Label>
-                  <Input className='text-gray-700 appearance-none block px-2.5 py-3 w-full ring-1 ring-inset ring-gray-950/20 focus:ring-2 focus:ring-blue-600 focus:outline-none hover:ring-gray-950/30 rounded-l' />
-                </TextField>
-                <TextField className='mt-4'>
-                  <Label>Date Applied</Label>
-                  <Input className='text-gray-700 appearance-none block px-2.5 py-3 w-full ring-1 ring-inset ring-gray-950/20 focus:ring-2 focus:ring-blue-600 focus:outline-none hover:ring-gray-950/30 rounded-l' />
-                </TextField>
-                <Select
-                  selectedKey={status}
-                  onSelectionChange={(selected) => setStatus(selected)}
-                  className='flex flex-col mt-4'
+      </button>
+      <Transition.Root show={open} as={Fragment}>
+        <Dialog as='div' className='relative z-10' onClose={setOpen}>
+          <div className='fixed inset-0' />
+
+          <div className='fixed inset-0 overflow-hidden'>
+            <div className='absolute inset-0 overflow-hidden'>
+              <div className='pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10'>
+                <Transition.Child
+                  as={Fragment}
+                  enter='transform transition ease-in-out duration-500 sm:duration-700'
+                  enterFrom='translate-x-full'
+                  enterTo='translate-x-0'
+                  leave='transform transition ease-in-out duration-500 sm:duration-700'
+                  leaveFrom='translate-x-0'
+                  leaveTo='translate-x-full'
                 >
-                  <Label>Status</Label>
-                  <Button className='flex items-center max-w-fit border border-gray-950/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600 py-3 px-2.5 text-gray-700 rounded mt-2'>
-                    <SelectValue className='flex-1' />
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      strokeWidth='1.5'
-                      stroke='currentColor'
-                      className='w-6 h-6 ml-1'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        d='M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9'
-                      />
-                    </svg>
-                  </Button>
-                  <Popover className='overflow-auto bg-white rounded shadow-lg ring-1 ring-black/5'>
-                    <ListBox selectionMode='single' className='p-1 outline-none'>
-                      <ListBoxItem className='flex items-center p-1 text-gray-900 rounded select-none group'>
-                        <Status>Applied</Status>
-                      </ListBoxItem>
-                      <ListBoxItem className='flex items-center p-1 text-gray-900 rounded select-none group'>
-                        <Status>Interviewing</Status>
-                      </ListBoxItem>
-                      <ListBoxItem className='flex items-center p-1 text-gray-900 rounded select-none group'>
-                        <Status>Offered</Status>
-                      </ListBoxItem>
-                      <ListBoxItem className='flex items-center p-1 text-gray-900 rounded select-none group'>
-                        <Status>Rejected</Status>
-                      </ListBoxItem>
-                    </ListBox>
-                  </Popover>
-                </Select>
-                <Button
-                  className='px-3.5 py-2 mt-6 text-white bg-blue-500 rounded w-fit ml-auto active:bg-blue-600'
-                  onPress={close}
-                >
-                  Add job
-                </Button>
-              </form>
-            )}
-          </Dialog>
-        </Modal>
-      </ModalOverlay>
-    </DialogTrigger>
+                  <Dialog.Panel className='pointer-events-auto w-screen max-w-sm'>
+                    <form className='flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl px-4'>
+                      <div className=''>
+                        <div className='flex items-start justify-between'>
+                          <Dialog.Title className='text-base font-semibold leading-6 text-gray-900'>
+                            Add job
+                          </Dialog.Title>
+                          <div className='ml-3 flex h-7 items-center'>
+                            <button
+                              type='button'
+                              className='relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+                              onClick={() => setOpen(false)}
+                            >
+                              <span className='absolute -inset-2.5' />
+                              <span className='sr-only'>Close panel</span>
+                              <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                fill='none'
+                                viewBox='0 0 24 24'
+                                strokeWidth='1.5'
+                                stroke='currentColor'
+                                className='w-6 h-6'
+                                aria-hidden='true'
+                              >
+                                <path
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                  d='M6 18 18 6M6 6l12 12'
+                                />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div className='mt-6 flex flex-col space-y-4'>
+                        <div>
+                          <label
+                            htmlFor='jobURL'
+                            className='block text-sm font-medium leading-6 text-gray-900'
+                          >
+                            Job URL
+                          </label>
+                          <div className='mt-1 flex rounded-md'>
+                            <input
+                              type='text'
+                              name='jobURL'
+                              id='jobURL'
+                              className='block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 rounded-l'
+                              placeholder='https://'
+                            />
+                            <button
+                              type='button'
+                              className='-ml-px px-3 py-1.5 rounded-r ring-1 ring-inset ring-blue-600 hover:bg-blue-500 bg-blue-600 text-white'
+                            >
+                              Scan
+                            </button>
+                          </div>
+                        </div>
+                        <div>
+                          <label
+                            htmlFor='name'
+                            className='block text-sm font-medium leading-6 text-gray-900'
+                          >
+                            Name
+                          </label>
+                          <div className='mt-1'>
+                            <input
+                              type='text'
+                              name='name'
+                              id='name'
+                              className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600'
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label
+                            htmlFor='company'
+                            className='block text-sm font-medium leading-6 text-gray-900'
+                          >
+                            Company
+                          </label>
+                          <div className='mt-1'>
+                            <input
+                              type='text'
+                              name='company'
+                              id='company'
+                              className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600'
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label
+                            htmlFor='company'
+                            className='block text-sm font-medium leading-6 text-gray-900'
+                          >
+                            Job ID
+                          </label>
+                          <div className='mt-1'>
+                            <input
+                              type='text'
+                              name='jobID'
+                              id='jobID'
+                              className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600'
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label
+                            htmlFor='datePosted'
+                            className='block text-sm font-medium leading-6 text-gray-900'
+                          >
+                            Date Posted
+                          </label>
+                          <div className='mt-1'>
+                            <input
+                              type='text'
+                              name='datePosted'
+                              id='datePosted'
+                              className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600'
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label
+                            htmlFor='dateApplied'
+                            className='block text-sm font-medium leading-6 text-gray-900'
+                          >
+                            Date Applied
+                          </label>
+                          <div className='mt-1'>
+                            <input
+                              type='text'
+                              name='dateApplied'
+                              id='dateApplied'
+                              className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600'
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label
+                            htmlFor='status'
+                            className='block text-sm font-medium leading-6 text-gray-900'
+                          >
+                            Status
+                          </label>
+                          <select
+                            id='status'
+                            name='status'
+                            className='mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600'
+                            defaultValue='Applied'
+                          >
+                            <option>Applied</option>
+                            <option>Pending</option>
+                            <option>Offered</option>
+                            <option>Rejected</option>
+                          </select>
+                        </div>
+                      </div>
+                      <button
+                        type='submit'
+                        className='bg-blue-600 py-2 px-3 text-white font-semibold hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 rounded-md ml-auto mt-6 w-16'
+                      >
+                        Save
+                      </button>
+                    </form>
+                  </Dialog.Panel>
+                </Transition.Child>
+              </div>
+            </div>
+          </div>
+        </Dialog>
+      </Transition.Root>
+    </>
   );
 }

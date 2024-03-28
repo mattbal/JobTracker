@@ -2,7 +2,6 @@
 
 import AddJobBtn from '../components/AddJobBtn';
 import FilterBtn from './FilterBtn';
-import ColumnsBtn from '../components/ColumnsBtn';
 
 export default function JobMenubar() {
   return (
@@ -29,7 +28,7 @@ export default function JobMenubar() {
           <input
             name='search'
             type='text'
-            className='text-gray-700 placeholder-gray-700 appearance-none rounded block pl-11 pr-2.5 py-3 w-full ring-1 ring-gray-950/20 focus:ring-inset  focus:ring-2 focus:ring-blue-600 focus:outline-none hover:ring-gray-950/30 hover:bg-gray-100 transition-colors ease-linear duration-150'
+            className='text-gray-700 placeholder-gray-700 appearance-none rounded-md block pl-11 pr-2.5 py-3 w-full ring-1 ring-gray-950/20 focus:ring-inset border-none focus:ring-2 focus:ring-blue-600 focus:outline-none'
             placeholder='Search'
           />
         </div>
