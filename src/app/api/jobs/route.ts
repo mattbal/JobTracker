@@ -2,7 +2,6 @@ import prisma from '@/lib/prisma';
 import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {
-  // params.id
   try {
     const jobs = await prisma.job.findMany();
     return Response.json(jobs);
@@ -15,8 +14,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: Request) {
   try {
-    const { jobPost, name, company, jobID, datePosted, dateApplied, status } =
-      await req.json();
+    const { jobPost, name, company, jobID, dateApplied, status } = await req.json();
     const result = await prisma.job.create({
       data: {
         jobPost: jobPost,
