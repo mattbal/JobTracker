@@ -1,4 +1,4 @@
-export default function Status({ children }: { children: string }) {
+export default function StatusBubble({ children }: { children: string }) {
   let color = '';
   if (children === 'Applied') {
     color = 'bg-blue-100 text-blue-800';

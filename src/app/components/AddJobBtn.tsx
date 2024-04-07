@@ -1,13 +1,67 @@
+'use client';
+
+import { Status } from '@prisma/client';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useState } from 'react';
-import Status from './Status';
 import { Oval } from 'react-loader-spinner';
 
 export default function AddJobBtn() {
   const [open, setOpen] = useState(false);
 
   const [jobURL, setJobURL] = useState('');
-  const [status, setStatus] = useState('react-aria-1');
+  const [name, setName] = useState('');
+  const [company, setCompany] = useState('');
+  const [jobID, setJobID] = useState('');
+  const [status, setStatus] = useState('Applied');
+  const [dateApplied, setDateApplied] = useState(
+    new Date().toLocaleString().split(',')[0]
+  );
+
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (name === '' || company === '') return;
+
+    setLoading(true);
+    try {
+      let newStatus;
+      switch (status) {
+        case 'Applied':
+          newStatus = Status.APPLIED;
+          break;
+        case 'Pending':
+          newStatus = Status.PENDING;
+          break;
+        case 'Offered':
+          newStatus = Status.OFFERED;
+          break;
+        case 'Rejected':
+          newStatus = Status.REJECTED;
+          break;
+        default:
+          newStatus = Status.APPLIED;
+      }
+      const response = await fetch('/api/jobs', {
+        method: 'POST',
+        body: JSON.stringify({
+          jobPost: jobURL,
+          name: name,
+          company: company,
+          jobID: jobID,
+          status: newStatus,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error('Something went wrong');
+      }
+      console.log(response);
+      setLoading(false);
+      setOpen(false);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <>
@@ -31,7 +85,6 @@ export default function AddJobBtn() {
       <Transition.Root show={open} as={Fragment}>
         <Dialog as='div' className='relative z-10' onClose={setOpen}>
           <div className='fixed inset-0' />
-
           <div className='fixed inset-0 overflow-hidden'>
             <div className='absolute inset-0 overflow-hidden'>
               <div className='pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10'>
@@ -45,7 +98,10 @@ export default function AddJobBtn() {
                   leaveTo='translate-x-full'
                 >
                   <Dialog.Panel className='pointer-events-auto w-screen max-w-sm'>
-                    <form className='flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl px-4'>
+                    <form
+                      onSubmit={handleSubmit}
+                      className='flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl px-4'
+                    >
                       <div className=''>
                         <div className='flex items-start justify-between'>
                           <Dialog.Title className='text-base font-semibold leading-6 text-gray-900'>
@@ -91,15 +147,11 @@ export default function AddJobBtn() {
                               type='text'
                               name='jobURL'
                               id='jobURL'
+                              value={jobURL}
+                              onChange={(e) => setJobURL(e.target.value)}
                               className='block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 rounded-l'
                               placeholder='https://'
                             />
-                            <button
-                              type='button'
-                              className='-ml-px px-3 py-1.5 rounded-r ring-1 ring-inset ring-blue-600 hover:bg-blue-500 bg-blue-600 text-white'
-                            >
-                              Scan
-                            </button>
                           </div>
                         </div>
                         <div>
@@ -114,6 +166,8 @@ export default function AddJobBtn() {
                               type='text'
                               name='name'
                               id='name'
+                              value={name}
+                              onChange={(e) => setName(e.target.value)}
                               className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600'
                             />
                           </div>
@@ -130,6 +184,8 @@ export default function AddJobBtn() {
                               type='text'
                               name='company'
                               id='company'
+                              value={company}
+                              onChange={(e) => setCompany(e.target.value)}
                               className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600'
                             />
                           </div>
@@ -146,22 +202,26 @@ export default function AddJobBtn() {
                               type='text'
                               name='jobID'
                               id='jobID'
+                              value={jobID}
+                              onChange={(e) => setJobID(e.target.value)}
                               className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600'
                             />
                           </div>
                         </div>
                         <div>
                           <label
-                            htmlFor='datePosted'
+                            htmlFor='company'
                             className='block text-sm font-medium leading-6 text-gray-900'
                           >
-                            Date Posted
+                            Company
                           </label>
                           <div className='mt-1'>
                             <input
                               type='text'
-                              name='datePosted'
-                              id='datePosted'
+                              name='company'
+                              id='company'
+                              value={company}
+                              onChange={(e) => setCompany(e.target.value)}
                               className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600'
                             />
                           </div>
@@ -178,7 +238,9 @@ export default function AddJobBtn() {
                               type='text'
                               name='dateApplied'
                               id='dateApplied'
-                              className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600'
+                              value={dateApplied}
+                              disabled
+                              className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200'
                             />
                           </div>
                         </div>
@@ -192,8 +254,9 @@ export default function AddJobBtn() {
                           <select
                             id='status'
                             name='status'
+                            defaultValue={status}
+                            onChange={(e) => setStatus(e.target.value)}
                             className='mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600'
-                            defaultValue='Applied'
                           >
                             <option>Applied</option>
                             <option>Pending</option>
@@ -204,9 +267,19 @@ export default function AddJobBtn() {
                       </div>
                       <button
                         type='submit'
-                        className='bg-blue-600 py-2 px-3 text-white font-semibold hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 rounded-md ml-auto mt-6 w-16'
+                        className='bg-blue-600 py-2 px-3 text-white font-semibold hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 rounded-md ml-auto mt-6 w-16 flex justify-center'
                       >
-                        Save
+                        {loading ? (
+                          <Oval
+                            height={24}
+                            width={24}
+                            strokeWidth={4}
+                            color='#fff'
+                            secondaryColor='#f5f5f5'
+                          />
+                        ) : (
+                          'Save'
+                        )}
                       </button>
                     </form>
                   </Dialog.Panel>
