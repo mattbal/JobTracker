@@ -1,24 +1,42 @@
 'use client';
 
-import { Status } from '@prisma/client';
+import { Job, Status } from '@prisma/client';
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, startTransition, useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Oval } from 'react-loader-spinner';
 import { useRouter } from 'next/navigation';
 
-export default function AddJobBtn() {
+export default function EditJobBtn({ job }: { job: Job }) {
   const [open, setOpen] = useState(false);
 
   const router = useRouter();
 
-  const [jobURL, setJobURL] = useState('');
-  const [name, setName] = useState('');
-  const [company, setCompany] = useState('');
-  const [jobID, setJobID] = useState('');
-  const [status, setStatus] = useState('Applied');
-  const [dateApplied, setDateApplied] = useState(new Date().toLocaleDateString());
+  const [jobURL, setJobURL] = useState(job.jobPost);
+  const [name, setName] = useState(job.name);
+  const [company, setCompany] = useState(job.company);
+  const [jobID, setJobID] = useState(job.jobID);
+  const [status, setStatus] = useState(
+    String(job.status.charAt(0) + job.status.slice(1).toLocaleLowerCase())
+  );
+  const [dateApplied, setDateApplied] = useState(job.dateApplied.toLocaleDateString());
 
   const [loading, setLoading] = useState(false);
+
+  async function handleDelete() {
+    try {
+      const response = await fetch(`/api/jobs/${job.id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Something went wrong');
+      }
+      setLoading(false);
+      setOpen(false);
+      router.refresh();
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -43,8 +61,8 @@ export default function AddJobBtn() {
         default:
           newStatus = Status.APPLIED;
       }
-      const response = await fetch('/api/jobs', {
-        method: 'POST',
+      const response = await fetch(`/api/jobs/${job.id}`, {
+        method: 'PATCH',
         body: JSON.stringify({
           jobPost: jobURL,
           name: name,
@@ -58,13 +76,6 @@ export default function AddJobBtn() {
       }
       setLoading(false);
       setOpen(false);
-      // reset all variables to default state
-      setJobURL('');
-      setName('');
-      setCompany('');
-      setJobID('');
-      setStatus('Applied');
-      setDateApplied(new Date().toLocaleDateString());
       router.refresh();
     } catch (error) {
       console.error(error);
@@ -76,19 +87,9 @@ export default function AddJobBtn() {
       <button
         type='button'
         onClick={() => setOpen(true)}
-        className='inline-flex items-center border border-gray-950/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600 rounded-md gap-x-2 py-3 px-2.5 text-gray-700 hover:bg-gray-50'
+        className=' focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600 rounded-md text-blue-600 hover:text-blue-900'
       >
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          fill='none'
-          viewBox='0 0 24 24'
-          strokeWidth='1.5'
-          stroke='currentColor'
-          className='w-6 h-6'
-        >
-          <path strokeLinecap='round' strokeLinejoin='round' d='M12 4.5v15m7.5-7.5h-15' />
-        </svg>
-        Add job
+        Edit
       </button>
       <Transition.Root show={open} as={Fragment}>
         <Dialog as='div' className='relative z-10' onClose={setOpen}>
@@ -113,7 +114,7 @@ export default function AddJobBtn() {
                       <div className=''>
                         <div className='flex items-start justify-between'>
                           <Dialog.Title className='text-base font-semibold leading-6 text-gray-900'>
-                            Add job
+                            Edit job
                           </Dialog.Title>
                           <div className='ml-3 flex h-7 items-center'>
                             <button
@@ -218,6 +219,24 @@ export default function AddJobBtn() {
                         </div>
                         <div>
                           <label
+                            htmlFor='company'
+                            className='block text-sm font-medium leading-6 text-gray-900'
+                          >
+                            Company
+                          </label>
+                          <div className='mt-1'>
+                            <input
+                              type='text'
+                              name='company'
+                              id='company'
+                              value={company}
+                              onChange={(e) => setCompany(e.target.value)}
+                              className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600'
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label
                             htmlFor='dateApplied'
                             className='block text-sm font-medium leading-6 text-gray-900'
                           >
@@ -255,22 +274,40 @@ export default function AddJobBtn() {
                           </select>
                         </div>
                       </div>
-                      <button
-                        type='submit'
-                        className='bg-blue-600 py-2 px-3 text-white font-semibold hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 rounded-md ml-auto mt-6 flex justify-center'
-                      >
-                        {loading ? (
-                          <Oval
-                            height={24}
-                            width={24}
-                            strokeWidth={4}
-                            color='#fff'
-                            secondaryColor='#f5f5f5'
-                          />
-                        ) : (
-                          'Save'
-                        )}
-                      </button>
+                      <div className='justify-between flex items-center mt-6'>
+                        <button
+                          type='button'
+                          className='rounded-md bg-white px-3 py-2 font-semibold text-red-600'
+                          onClick={handleDelete}
+                        >
+                          Delete
+                        </button>
+                        <div className='flex justify-end space-x-3'>
+                          <button
+                            type='button'
+                            className='rounded-md bg-white px-3 py-2 font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50'
+                            onClick={() => setOpen(false)}
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type='submit'
+                            className='bg-blue-600 py-2 px-3 text-white font-semibold hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 rounded-md ml-auto flex justify-center'
+                          >
+                            {loading ? (
+                              <Oval
+                                height={24}
+                                width={24}
+                                strokeWidth={4}
+                                color='#fff'
+                                secondaryColor='#f5f5f5'
+                              />
+                            ) : (
+                              'Save'
+                            )}
+                          </button>
+                        </div>
+                      </div>
                     </form>
                   </Dialog.Panel>
                 </Transition.Child>

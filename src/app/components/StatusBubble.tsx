@@ -2,7 +2,7 @@ export default function StatusBubble({ children }: { children: string }) {
   let color = '';
   if (children === 'Applied') {
     color = 'bg-blue-100 text-blue-800';
-  } else if (children === 'Interviewing') {
+  } else if (children === 'Pending') {
     color = 'bg-orange-100 text-orange-800';
   } else if (children === 'Offered') {
     color = 'bg-green-100 text-green-800';
