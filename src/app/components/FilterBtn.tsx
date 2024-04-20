@@ -1,12 +1,30 @@
+'use client';
 import { Popover, Transition } from '@headlessui/react';
-import { Fragment, useState } from 'react';
+import { Fragment, Dispatch, SetStateAction } from 'react';
 
-export default function FilterBtn() {
-  const [applied, setApplied] = useState(true);
-  const [pending, setPending] = useState(true);
-  const [rejected, setRejected] = useState(true);
-  const [offered, setOffered] = useState(true);
+type Props = {
+  applied: boolean;
+  pending: boolean;
+  rejected: boolean;
+  offered: boolean;
+  setApplied: Dispatch<SetStateAction<boolean>>;
+  setPending: Dispatch<SetStateAction<boolean>>;
+  setRejected: Dispatch<SetStateAction<boolean>>;
+  setOffered: Dispatch<SetStateAction<boolean>>;
+  handleFilterChange: (e: React.ChangeEvent<HTMLInputElement>, filter: string) => void;
+};
 
+export default function FilterBtn({
+  applied,
+  pending,
+  rejected,
+  offered,
+  setApplied,
+  setPending,
+  setRejected,
+  setOffered,
+  handleFilterChange,
+}: Props) {
   return (
     <Popover className='relative'>
       <Popover.Button className='inline-flex items-center border border-gray-950/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600 rounded-md gap-x-2 py-3 px-2.5 text-gray-700 hover:bg-gray-50'>
@@ -46,7 +64,10 @@ export default function FilterBtn() {
                     name='applied'
                     type='checkbox'
                     checked={applied}
-                    onChange={() => setApplied(!applied)}
+                    onChange={(e) => {
+                      setApplied(!applied);
+                      handleFilterChange(e, 'applied');
+                    }}
                     className='h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600'
                   />
                 </div>
@@ -63,7 +84,10 @@ export default function FilterBtn() {
                     name='pending'
                     type='checkbox'
                     checked={pending}
-                    onChange={() => setPending(!pending)}
+                    onChange={(e) => {
+                      setPending(!pending);
+                      handleFilterChange(e, 'pending');
+                    }}
                     className='h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600'
                   />
                 </div>
@@ -80,7 +104,10 @@ export default function FilterBtn() {
                     name='rejected'
                     type='checkbox'
                     checked={rejected}
-                    onChange={() => setRejected(!rejected)}
+                    onChange={(e) => {
+                      setRejected(!rejected);
+                      handleFilterChange(e, 'rejected');
+                    }}
                     className='h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600'
                   />
                 </div>
@@ -97,7 +124,10 @@ export default function FilterBtn() {
                     name='offered'
                     type='checkbox'
                     checked={offered}
-                    onChange={() => setOffered(!offered)}
+                    onChange={(e) => {
+                      setOffered(!offered);
+                      handleFilterChange(e, 'offered');
+                    }}
                     className='h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600'
                   />
                 </div>

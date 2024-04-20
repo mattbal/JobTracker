@@ -65,7 +65,7 @@ export default function AddJobBtn() {
       setJobID('');
       setStatus('Applied');
       setDateApplied(new Date().toLocaleDateString());
-      router.refresh();
+      // router.refresh();
     } catch (error) {
       console.error(error);
     }

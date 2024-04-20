@@ -2,8 +2,31 @@
 
 import AddJobBtn from '../components/AddJobBtn';
 import FilterBtn from './FilterBtn';
+import { Dispatch, SetStateAction } from 'react';
 
-export default function JobMenubar() {
+type Props = {
+  applied: boolean;
+  pending: boolean;
+  rejected: boolean;
+  offered: boolean;
+  setApplied: Dispatch<SetStateAction<boolean>>;
+  setPending: Dispatch<SetStateAction<boolean>>;
+  setRejected: Dispatch<SetStateAction<boolean>>;
+  setOffered: Dispatch<SetStateAction<boolean>>;
+  handleFilterChange: (e: React.ChangeEvent<HTMLInputElement>, filter: string) => void;
+};
+
+export default function JobMenubar({
+  applied,
+  pending,
+  rejected,
+  offered,
+  setApplied,
+  setPending,
+  setRejected,
+  setOffered,
+  handleFilterChange,
+}: Props) {
   return (
     <div className='flex items-center justify-between mt-9'>
       <div className='flex items-center gap-x-3'>
@@ -32,7 +55,17 @@ export default function JobMenubar() {
             placeholder='Search'
           />
         </div>
-        <FilterBtn />
+        <FilterBtn
+          applied={applied}
+          pending={pending}
+          rejected={rejected}
+          offered={offered}
+          setApplied={setApplied}
+          setPending={setPending}
+          setRejected={setRejected}
+          setOffered={setOffered}
+          handleFilterChange={handleFilterChange}
+        />
       </div>
       <AddJobBtn />
     </div>

@@ -18,7 +18,9 @@ export default function EditJobBtn({ job }: { job: Job }) {
   const [status, setStatus] = useState(
     String(job.status.charAt(0) + job.status.slice(1).toLocaleLowerCase())
   );
-  const [dateApplied, setDateApplied] = useState(job.dateApplied.toLocaleDateString());
+  const [dateApplied, setDateApplied] = useState(
+    new Date(job.dateApplied).toLocaleDateString()
+  );
 
   const [loading, setLoading] = useState(false);
 
@@ -32,7 +34,7 @@ export default function EditJobBtn({ job }: { job: Job }) {
       }
       setLoading(false);
       setOpen(false);
-      router.refresh();
+      // router.refresh();
     } catch (error) {
       console.error(error);
     }
