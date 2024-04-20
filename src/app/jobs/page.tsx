@@ -11,8 +11,10 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function Page() {
   const [jobs, setJobs] = useState([]);
-  const [filteredJobs, setFilteredJobs] = useState([]);
   const [isLoading, setLoading] = useState(true);
+
+  const [search, setSearch] = useState('');
+
   const [numActiveJobs, setNumActiveJobs] = useState(0);
   const [numPendingJobs, setNumPendingJobs] = useState(0);
   const [error, setError] = useState(null);
@@ -46,7 +48,6 @@ export default function Page() {
       .then((res) => res.json())
       .then((data) => {
         setJobs(data);
-        setFilteredJobs(data);
         setNumActiveJobs(data.filter((job: Job) => job.status === Status.APPLIED).length);
         setNumPendingJobs(
           data.filter((job: Job) => job.status === Status.PENDING).length
@@ -78,6 +79,8 @@ export default function Page() {
           setRejected={setRejected}
           setOffered={setOffered}
           handleFilterChange={handleFilterChange}
+          search={search}
+          setSearch={setSearch}
         />
         <table className='w-full mt-5 overflow-auto text-gray-600'>
           <thead>
@@ -128,6 +131,8 @@ export default function Page() {
           setRejected={setRejected}
           setOffered={setOffered}
           handleFilterChange={handleFilterChange}
+          search={search}
+          setSearch={setSearch}
         />
         <table className='w-full mt-5 overflow-auto text-gray-600'>
           <thead>
@@ -199,6 +204,8 @@ export default function Page() {
         setRejected={setRejected}
         setOffered={setOffered}
         handleFilterChange={handleFilterChange}
+        search={search}
+        setSearch={setSearch}
       />
       <table className='w-full mt-5 overflow-auto text-gray-600'>
         <thead>
@@ -228,6 +235,18 @@ export default function Page() {
         </thead>
         <tbody className='divide-y divide-gray-200 text-gray-600'>
           {jobs
+            .filter((job: Job) => {
+              const newSearch = search.toLocaleLowerCase();
+              if (newSearch === '') {
+                return job;
+              } else {
+                return (
+                  job.name.toLocaleLowerCase().includes(newSearch) ||
+                  job.company.toLocaleLowerCase().includes(newSearch) ||
+                  job.jobPost.toLocaleLowerCase().includes(newSearch)
+                );
+              }
+            })
             .filter((job: Job) =>
               !applied && !pending && !rejected && !offered
                 ? job

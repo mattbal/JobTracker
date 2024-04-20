@@ -14,6 +14,8 @@ type Props = {
   setRejected: Dispatch<SetStateAction<boolean>>;
   setOffered: Dispatch<SetStateAction<boolean>>;
   handleFilterChange: (e: React.ChangeEvent<HTMLInputElement>, filter: string) => void;
+  search: string;
+  setSearch: Dispatch<SetStateAction<string>>;
 };
 
 export default function JobMenubar({
@@ -26,6 +28,8 @@ export default function JobMenubar({
   setRejected,
   setOffered,
   handleFilterChange,
+  search,
+  setSearch,
 }: Props) {
   return (
     <div className='flex items-center justify-between mt-9'>
@@ -53,6 +57,8 @@ export default function JobMenubar({
             type='text'
             className='text-gray-700 placeholder-gray-700 appearance-none rounded-md block pl-11 pr-2.5 py-3 w-full ring-1 ring-gray-950/20 focus:ring-inset border-none focus:ring-2 focus:ring-blue-600 focus:outline-none'
             placeholder='Search'
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
         </div>
         <FilterBtn
