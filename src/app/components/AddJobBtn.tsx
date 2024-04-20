@@ -100,7 +100,7 @@ export default function AddJobBtn({ jobs, setJobs, setStats }: Props) {
       setCompany('');
       setJobID('');
       setStatus('Applied');
-      setDateApplied(new Date().toLocaleDateString());
+      setDateApplied(getCurrentDateInput());
     } catch (error) {
       console.error(error);
     }
