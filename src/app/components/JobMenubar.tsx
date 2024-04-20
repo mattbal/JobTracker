@@ -17,6 +17,7 @@ type Props = {
   handleFilterChange: (e: React.ChangeEvent<HTMLInputElement>, filter: string) => void;
   search: string;
   setSearch: Dispatch<SetStateAction<string>>;
+  handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   jobs: Job[];
   setJobs: Dispatch<SetStateAction<Job[]>>;
   setStats: (jobs: Job[]) => void;
@@ -34,6 +35,7 @@ export default function JobMenubar({
   handleFilterChange,
   search,
   setSearch,
+  handleSearchChange,
   jobs,
   setJobs,
   setStats,
@@ -65,7 +67,10 @@ export default function JobMenubar({
             className='text-gray-700 placeholder-gray-700 appearance-none rounded-md block pl-11 pr-2.5 py-3 w-full ring-1 ring-gray-950/20 focus:ring-inset border-none focus:ring-2 focus:ring-blue-600 focus:outline-none'
             placeholder='Search'
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              handleSearchChange(e);
+            }}
           />
         </div>
         <FilterBtn

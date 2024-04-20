@@ -10,17 +10,17 @@ import SkeletonStat from '../components/SkeletonStat';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function Page() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [jobs, setJobs] = useState<Job[]>([]);
   const [isLoading, setLoading] = useState(true);
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(searchParams.get('q'));
 
   const [numActiveJobs, setNumActiveJobs] = useState(0);
   const [numPendingJobs, setNumPendingJobs] = useState(0);
   const [error, setError] = useState(null);
-
-  const router = useRouter();
-  const searchParams = useSearchParams();
 
   const [applied, setApplied] = useState(
     searchParams.getAll('filter').includes('applied')
@@ -41,6 +41,16 @@ export default function Page() {
       ? newSearchParams.append('filter', filter)
       : newSearchParams.delete('filter', filter);
     router.push(`/jobs?${newSearchParams.toString()}`);
+  }
+
+  function handleSearchChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    if (e.target.value === '') {
+      newSearchParams.delete('q');
+    } else {
+      newSearchParams.set('q', e.target.value);
+    }
+    router.push(`jobs?${newSearchParams.toString()}`);
   }
 
   function setStats(jobs: Job[]) {
@@ -83,6 +93,7 @@ export default function Page() {
           handleFilterChange={handleFilterChange}
           search={search}
           setSearch={setSearch}
+          handleSearchChange={handleSearchChange}
           jobs={jobs}
           setJobs={setJobs}
           setStats={setStats}
@@ -138,6 +149,7 @@ export default function Page() {
           handleFilterChange={handleFilterChange}
           search={search}
           setSearch={setSearch}
+          handleSearchChange={handleSearchChange}
           jobs={jobs}
           setJobs={setJobs}
           setStats={setStats}
@@ -214,6 +226,7 @@ export default function Page() {
         handleFilterChange={handleFilterChange}
         search={search}
         setSearch={setSearch}
+        handleSearchChange={handleSearchChange}
         jobs={jobs}
         setJobs={setJobs}
         setStats={setStats}
