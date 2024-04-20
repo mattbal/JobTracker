@@ -16,7 +16,7 @@ export default function Page() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [isLoading, setLoading] = useState(true);
 
-  const [search, setSearch] = useState(searchParams.get('q'));
+  const [search, setSearch] = useState(searchParams.get('q') ?? '');
 
   const [numActiveJobs, setNumActiveJobs] = useState(0);
   const [numPendingJobs, setNumPendingJobs] = useState(0);
