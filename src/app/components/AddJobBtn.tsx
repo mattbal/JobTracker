@@ -23,7 +23,21 @@ export default function AddJobBtn({ jobs, setJobs, setStats }: Props) {
   const [company, setCompany] = useState('');
   const [jobID, setJobID] = useState('');
   const [status, setStatus] = useState('Applied');
-  const [dateApplied, setDateApplied] = useState(new Date().toLocaleDateString());
+
+  function getCurrentDateInput() {
+    const dateObj = new Date();
+
+    // get the month in this format of 04, the same for months
+    const month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+    const day = ('0' + dateObj.getDate()).slice(-2);
+    const year = dateObj.getFullYear();
+
+    const shortDate = `${year}-${month}-${day}`;
+
+    return shortDate;
+  }
+
+  const [dateApplied, setDateApplied] = useState(getCurrentDateInput());
 
   const [loading, setLoading] = useState(false);
 
@@ -50,7 +64,7 @@ export default function AddJobBtn({ jobs, setJobs, setStats }: Props) {
         default:
           newStatus = Status.APPLIED;
       }
-      let date = new Date();
+      let date = new Date(dateApplied);
       const response = await fetch('/api/jobs', {
         method: 'POST',
         body: JSON.stringify({
@@ -246,11 +260,11 @@ export default function AddJobBtn({ jobs, setJobs, setStats }: Props) {
                           </label>
                           <div className='mt-1'>
                             <input
-                              type='text'
+                              type='date'
                               name='dateApplied'
                               id='dateApplied'
                               value={dateApplied}
-                              disabled
+                              onChange={(e) => setDateApplied(e.target.value)}
                               className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200'
                             />
                           </div>
