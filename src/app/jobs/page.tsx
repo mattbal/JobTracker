@@ -10,7 +10,7 @@ import SkeletonStat from '../components/SkeletonStat';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function Page() {
-  const [jobs, setJobs] = useState([]);
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [isLoading, setLoading] = useState(true);
 
   const [search, setSearch] = useState('');
@@ -43,15 +43,17 @@ export default function Page() {
     router.push(`/jobs?${newSearchParams.toString()}`);
   }
 
+  function setStats(jobs: Job[]) {
+    setNumActiveJobs(jobs.filter((job: Job) => job.status === Status.APPLIED).length);
+    setNumPendingJobs(jobs.filter((job: Job) => job.status === Status.PENDING).length);
+  }
+
   useEffect(() => {
     fetch('/api/jobs')
       .then((res) => res.json())
       .then((data) => {
         setJobs(data);
-        setNumActiveJobs(data.filter((job: Job) => job.status === Status.APPLIED).length);
-        setNumPendingJobs(
-          data.filter((job: Job) => job.status === Status.PENDING).length
-        );
+        setStats(data);
         setLoading(false);
       })
       .catch((error) => {
@@ -81,6 +83,9 @@ export default function Page() {
           handleFilterChange={handleFilterChange}
           search={search}
           setSearch={setSearch}
+          jobs={jobs}
+          setJobs={setJobs}
+          setStats={setStats}
         />
         <table className='w-full mt-5 overflow-auto text-gray-600'>
           <thead>
@@ -109,7 +114,7 @@ export default function Page() {
             </tr>
           </thead>
         </table>
-        <p className='text-center mt-16 text-red-600'>Error fetching data</p>
+        <p className='text-center mt-12 text-red-600'>Error fetching data</p>
       </div>
     );
   if (isLoading)
@@ -133,6 +138,9 @@ export default function Page() {
           handleFilterChange={handleFilterChange}
           search={search}
           setSearch={setSearch}
+          jobs={jobs}
+          setJobs={setJobs}
+          setStats={setStats}
         />
         <table className='w-full mt-5 overflow-auto text-gray-600'>
           <thead>
@@ -206,6 +214,9 @@ export default function Page() {
         handleFilterChange={handleFilterChange}
         search={search}
         setSearch={setSearch}
+        jobs={jobs}
+        setJobs={setJobs}
+        setStats={setStats}
       />
       <table className='w-full mt-5 overflow-auto text-gray-600'>
         <thead>
@@ -274,13 +285,18 @@ export default function Page() {
                   </a>
                 </td>
                 <td className='px-3 py-4'>
-                  <EditJobBtn job={job} />
+                  <EditJobBtn
+                    job={job}
+                    jobs={jobs}
+                    setJobs={setJobs}
+                    setStats={setStats}
+                  />
                 </td>
               </tr>
             ))}
         </tbody>
       </table>
-      {jobs.length === 0 && <p className='text-center mt-16'>No jobs added yet.</p>}
+      {jobs.length === 0 && <p className='text-center mt-12'>No jobs added yet.</p>}
     </div>
   );
 }

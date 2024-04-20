@@ -3,6 +3,7 @@
 import AddJobBtn from '../components/AddJobBtn';
 import FilterBtn from './FilterBtn';
 import { Dispatch, SetStateAction } from 'react';
+import { Job } from '@prisma/client';
 
 type Props = {
   applied: boolean;
@@ -16,6 +17,9 @@ type Props = {
   handleFilterChange: (e: React.ChangeEvent<HTMLInputElement>, filter: string) => void;
   search: string;
   setSearch: Dispatch<SetStateAction<string>>;
+  jobs: Job[];
+  setJobs: Dispatch<SetStateAction<Job[]>>;
+  setStats: (jobs: Job[]) => void;
 };
 
 export default function JobMenubar({
@@ -30,6 +34,9 @@ export default function JobMenubar({
   handleFilterChange,
   search,
   setSearch,
+  jobs,
+  setJobs,
+  setStats,
 }: Props) {
   return (
     <div className='flex items-center justify-between mt-9'>
@@ -73,7 +80,7 @@ export default function JobMenubar({
           handleFilterChange={handleFilterChange}
         />
       </div>
-      <AddJobBtn />
+      <AddJobBtn jobs={jobs} setJobs={setJobs} setStats={setStats} />
     </div>
   );
 }

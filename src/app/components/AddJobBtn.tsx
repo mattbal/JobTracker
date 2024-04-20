@@ -2,11 +2,18 @@
 
 import { Status } from '@prisma/client';
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, startTransition, useState } from 'react';
+import { Fragment, useState, Dispatch, SetStateAction } from 'react';
 import { Oval } from 'react-loader-spinner';
 import { useRouter } from 'next/navigation';
+import { Job } from '@prisma/client';
 
-export default function AddJobBtn() {
+type Props = {
+  jobs: Job[];
+  setJobs: Dispatch<SetStateAction<Job[]>>;
+  setStats: (jobs: Job[]) => void;
+};
+
+export default function AddJobBtn({ jobs, setJobs, setStats }: Props) {
   const [open, setOpen] = useState(false);
 
   const router = useRouter();
@@ -26,7 +33,7 @@ export default function AddJobBtn() {
 
     setLoading(true);
     try {
-      let newStatus;
+      let newStatus: Status;
       switch (status) {
         case 'Applied':
           newStatus = Status.APPLIED;
@@ -43,6 +50,7 @@ export default function AddJobBtn() {
         default:
           newStatus = Status.APPLIED;
       }
+      let date = new Date();
       const response = await fetch('/api/jobs', {
         method: 'POST',
         body: JSON.stringify({
@@ -51,11 +59,25 @@ export default function AddJobBtn() {
           company: company,
           jobID: jobID,
           status: newStatus,
+          dateApplied: date,
         }),
       });
       if (!response.ok) {
         throw new Error('Something went wrong');
       }
+      setJobs([
+        ...jobs,
+        {
+          id: jobs.length ? jobs[jobs.length - 1].id + 1 : 1,
+          name: name,
+          company: company,
+          jobID: jobID,
+          status: newStatus,
+          jobPost: jobURL,
+          dateApplied: date,
+        },
+      ]);
+      setStats(jobs);
       setLoading(false);
       setOpen(false);
       // reset all variables to default state
@@ -65,7 +87,6 @@ export default function AddJobBtn() {
       setJobID('');
       setStatus('Applied');
       setDateApplied(new Date().toLocaleDateString());
-      // router.refresh();
     } catch (error) {
       console.error(error);
     }

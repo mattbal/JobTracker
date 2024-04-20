@@ -2,11 +2,18 @@
 
 import { Job, Status } from '@prisma/client';
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useState } from 'react';
+import { Fragment, useState, Dispatch, SetStateAction } from 'react';
 import { Oval } from 'react-loader-spinner';
 import { useRouter } from 'next/navigation';
 
-export default function EditJobBtn({ job }: { job: Job }) {
+type Props = {
+  job: Job;
+  jobs: Job[];
+  setJobs: Dispatch<SetStateAction<Job[]>>;
+  setStats: (jobs: Job[]) => void;
+};
+
+export default function EditJobBtn({ job, jobs, setJobs, setStats }: Props) {
   const [open, setOpen] = useState(false);
 
   const router = useRouter();
@@ -32,9 +39,11 @@ export default function EditJobBtn({ job }: { job: Job }) {
       if (!response.ok) {
         throw new Error('Something went wrong');
       }
+      const newJobs = jobs.filter((j: Job) => j.id !== job.id);
+      setJobs(newJobs);
+      setStats(newJobs);
       setLoading(false);
       setOpen(false);
-      // router.refresh();
     } catch (error) {
       console.error(error);
     }
@@ -46,7 +55,7 @@ export default function EditJobBtn({ job }: { job: Job }) {
 
     setLoading(true);
     try {
-      let newStatus;
+      let newStatus: Status;
       switch (status) {
         case 'Applied':
           newStatus = Status.APPLIED;
@@ -76,6 +85,20 @@ export default function EditJobBtn({ job }: { job: Job }) {
       if (!response.ok) {
         throw new Error('Something went wrong');
       }
+      const newJobs = jobs.map((j: Job) =>
+        j.id === job.id
+          ? {
+              ...j,
+              jobPost: jobURL,
+              name: name,
+              company: company,
+              jobID: jobID,
+              status: newStatus,
+            }
+          : j
+      );
+      setJobs(newJobs);
+      setStats(newJobs);
       setLoading(false);
       setOpen(false);
       router.refresh();
