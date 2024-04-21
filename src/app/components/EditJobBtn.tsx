@@ -249,24 +249,6 @@ export default function EditJobBtn({ job, jobs, setJobs, setStats }: Props) {
                         </div>
                         <div>
                           <label
-                            htmlFor='company'
-                            className='block text-sm font-medium leading-6 text-gray-900'
-                          >
-                            Company
-                          </label>
-                          <div className='mt-1'>
-                            <input
-                              type='text'
-                              name='company'
-                              id='company'
-                              value={company}
-                              onChange={(e) => setCompany(e.target.value)}
-                              className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600'
-                            />
-                          </div>
-                        </div>
-                        <div>
-                          <label
                             htmlFor='dateApplied'
                             className='block text-sm font-medium leading-6 text-gray-900'
                           >
