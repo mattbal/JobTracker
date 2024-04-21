@@ -26,16 +26,14 @@ export default function EditJobBtn({ job, jobs, setJobs, setStats }: Props) {
     String(job.status.charAt(0) + job.status.slice(1).toLocaleLowerCase())
   );
   function getCurrentDateInput() {
-    const dateObj = new Date();
-
-    // get the month in this format of 04, the same for months
-    const month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
-    const day = ('0' + dateObj.getDate()).slice(-2);
-    const year = dateObj.getFullYear();
-
-    const shortDate = `${year}-${month}-${day}`;
-
-    return shortDate;
+    const d = new Date()
+      .toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' })
+      .split('/');
+    // Year-Month-Day
+    // Extra ternary operator to turn 1/1/2024 to 2024-01-01
+    return `${d[2]}-${Number(d[0]) < 10 ? `0${d[0]}` : `${d[0]}`}-${
+      Number(d[1]) < 10 ? `0${d[1]}` : `${d[1]}`
+    }`;
   }
 
   const [dateApplied, setDateApplied] = useState(getCurrentDateInput());
