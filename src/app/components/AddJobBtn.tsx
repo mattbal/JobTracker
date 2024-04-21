@@ -25,14 +25,7 @@ export default function AddJobBtn({ jobs, setJobs, setStats }: Props) {
   const [status, setStatus] = useState('Applied');
 
   function getCurrentDateInput() {
-    const d = new Date()
-      .toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles' })
-      .split('/');
-    // Year-Month-Day
-    // Extra ternary operator to turn 1/1/2024 to 2024-01-01
-    return `${d[2]}-${Number(d[0]) < 10 ? `0${d[0]}` : `${d[0]}`}-${
-      Number(d[1]) < 10 ? `0${d[1]}` : `${d[1]}`
-    }`;
+    return new Date().toISOString().slice(0, 10);
   }
 
   const [dateApplied, setDateApplied] = useState(getCurrentDateInput());
