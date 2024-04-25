@@ -3,13 +3,12 @@
 JobTracker is a Next.js web application that helps you keep track of your job applications!
 
 Features:
-* Searching
-* Filtering
-* Stats on how many total applications vs active vs pending
+
+- Searching
+- Filtering
+- Stats on how many total applications vs active vs pending
 
 ![JobTracker](https://github.com/mattbal/JobTracker/assets/55065240/eefac11c-ff82-4527-bf65-3493e4033a14)
-
-
 
 ## Getting Started
 
@@ -18,7 +17,15 @@ First, make sure [Node.js](https://nodejs.org/en) and [Docker Desktop](https://w
 Then, setup the database by running:
 `docker run -p 5432:5432 -e POSTGRES_HOST_AUTH_METHOD=trust postgres`
 
-Then, clone this repo and run the development server:
+Then, clone this repo.
+
+Create a new `.env` file with the following:
+
+```
+DATABASE_URL="postgresql://postgres:@localhost:5432/postgres?schema=public"
+```
+
+Finaly, run the development server:
 
 ```bash
 npm run dev
