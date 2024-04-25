@@ -66,72 +66,17 @@ export default function Page() {
         const data = await response.json();
         setJobs(data);
         setStats(data);
-        setLoading(false);
       } catch (error: any) {
         console.error(error);
         setError(error);
+      } finally {
+        setLoading(false);
       }
     }
 
     getData();
   }, []);
 
-  if (error)
-    return (
-      <div className='mx-8 mt-12 mb-4'>
-        <h1 className='text-5xl font-bold'>Jobs</h1>
-        <div className='flex flex-row gap-3.5 mt-6'>
-          <Stat title='Total applications' number={0} />
-          <Stat title='Active' number={0} />
-          <Stat title='Pending' number={0} />
-        </div>
-        <JobMenubar
-          applied={applied}
-          pending={pending}
-          rejected={rejected}
-          offered={offered}
-          setApplied={setApplied}
-          setPending={setPending}
-          setRejected={setRejected}
-          setOffered={setOffered}
-          handleFilterChange={handleFilterChange}
-          search={search}
-          setSearch={setSearch}
-          handleSearchChange={handleSearchChange}
-          jobs={jobs}
-          setJobs={setJobs}
-          setStats={setStats}
-        />
-        <table className='w-full mt-5 overflow-auto text-gray-600'>
-          <thead>
-            <tr className='text-left sticky top-0 border-b border-gray-300 bg-white text-gray-900'>
-              <th scope='col' className='px-3 py-3.5'>
-                Name
-              </th>
-              <th scope='col' className='px-3 py-3.5'>
-                Company
-              </th>
-              <th scope='col' className='px-3 py-3.5'>
-                Date Applied
-              </th>
-              <th scope='col' className='px-3 py-3.5'>
-                Job ID
-              </th>
-              <th scope='col' className='px-3 py-3.5'>
-                Status
-              </th>
-              <th scope='col' className='px-3 py-3.5 max-w-96'>
-                Job Post
-              </th>
-              <th scope='col' className='px-3 py-3.5'>
-                <span className='sr-only'>Edit</span>
-              </th>
-            </tr>
-          </thead>
-        </table>
-        <p className='text-center mt-12 text-red-600'>Error fetching data</p>
-      </div>
-    );
   if (isLoading)
     return (
       <div className='mx-8 mt-12 mb-4'>
@@ -313,7 +258,10 @@ export default function Page() {
             ))}
         </tbody>
       </table>
-      {jobs.length === 0 && <p className='text-center mt-12'>No jobs added yet.</p>}
+      {jobs.length === 0 && !error && (
+        <p className='text-center mt-12'>No jobs added yet.</p>
+      )}
+      {error && <p className='text-center mt-12 text-red-600'>Error fetching data</p>}
     </div>
   );
 }
