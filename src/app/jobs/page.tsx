@@ -59,17 +59,21 @@ export default function Page() {
   }
 
   useEffect(() => {
-    fetch('/api/jobs')
-      .then((res) => res.json())
-      .then((data) => {
+    async function getData() {
+      try {
+        const response = await fetch('/api/jobs');
+        if (!response.ok) throw Error('Did not receive data');
+        const data = await response.json();
         setJobs(data);
         setStats(data);
         setLoading(false);
-      })
-      .catch((error) => {
+      } catch (error: any) {
         console.error(error);
         setError(error);
-      });
+      }
+    }
+
+    getData();
   }, []);
 
   if (error)
